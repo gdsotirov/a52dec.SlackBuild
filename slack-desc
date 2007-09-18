@@ -1,11 +1,11 @@
-a52dec: a52dec 0.7.4 (2002-07-27)
+a52dec: a52dec (A free ATSC A/52 stream decoder)
 a52dec:
-a52dec: A free ATSC A/52 stream decoder
+a52dec: liba52 is a free library for decoding ATSC A/52 streams. It is
+a52dec: released under the terms of the GPL license. The A/52 standard is
+a52dec: used in a variety of applications, including digital television
+a52dec: and DVD. It is also known as AC-3.
 a52dec:
 a52dec:
-a52dec: ---
-a52dec: Package build by Georgi D. Sotirov <gdsotirov@dir.bg>
-a52dec: Configure command: ./configure --prefix=/usr/local \
-a52dec:                                --enable-shared
-a52dec: Build date: 2005-03-16 20:40 EET
+a52dec:
+a52dec: Packaged by Georgi D. Sotirov <gdsotirov@dir.bg>
 a52dec:
