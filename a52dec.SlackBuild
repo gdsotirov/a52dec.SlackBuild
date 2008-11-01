@@ -8,7 +8,7 @@
 
 NAME=a52dec
 VERSION=0.7.4
-BUILD=1
+BUILD=2
 
 cd $TMP
 tar -zxvf $CWD/$NAME-$VERSION.tar.gz
@@ -22,14 +22,14 @@ CXXFLAGS=$SLKCFLAGS \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
 	    --enable-shared=yes \
-	    --enable-static=no
+	    --enable-static=no || exit 1
 
-make || exit 1
+make -j4 || exit 1
 
 PKG="$TMP/package-$NAME"
 mkdir -p $PKG
 
-make -e DESTDIR=$PKG install
+make -e DESTDIR=$PKG install || exit 3
 
 bin_perms $PKG
 ( cd $PKG; strip_bin; strip_lib )
@@ -37,11 +37,13 @@ bin_perms $PKG
 gzip_man $PKG
 
 mkdir -p $PKG/install
-install -m 644 $CWD/slack-desc     $PKG/install
+install -m 644 $CWD/slack-desc     $PKG/install/slack-desc
+install -m 644 $CWD/slack-required $PKG/install/slack-required
 
 mkdir -p $PKG/usr/src/slackbuilds/$NAME-$VERSION
-install -m 644 $CWD/slack-desc $PKG/usr/src/slackbuilds/$NAME-$VERSION
-install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION
+install -m 644 $CWD/slack-desc       $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-desc
+install -m 644 $CWD/slack-required   $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-required
+install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME.SlackBuild
 
 cd $PKG
 PKGNAME=$NAME-$VERSION-$ARCH-$BUILD$MYIN
