@@ -1,18 +1,40 @@
 #!/bin/sh
 #
-# SlackBuild for A52 Decoder
-# Written by Georgi D. Sotirov <gdsotirov@dir.bg>
+# Slackware build script for A52 Decoder
+# Copyright (C) 2005-2016 Georgi D. Sotirov <gdsotirov@dir.bg>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# Visit SlackPack at http://sotirov-bg.net/slackpack/
+#
+# $Id: a52dec.SlackBuild,v 1.4 2016/08/18 17:06:00 gsotirov Exp $
 #
 
-. ../slack-package.conf
+. ../../slack-package.conf
 
 NAME=a52dec
 VERSION=0.7.4
-BUILD=3
+ARCH=${ARCH:-i486}
+BUILD=${BUILD:=1}
+
+if [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="$SLKCFLAGS -fPIC"
+fi
 
 TMP=${TMP:-/tmp}
 CWD=${CWD:-`pwd`}
-PKG_DIR=${PKG_DIR:-/tmp}
 
 if [ ! -e $TMP ]; then
   mkdir -p $TMP # location to build the source
@@ -33,7 +55,7 @@ mkdir -p $PKG
 
 # Extract and fix source
 cd $TMP
-tar xzvf $CWD/$NAME-$VERSION.tar.gz
+tar -xvf $CWD/$NAME-$VERSION.tar.?z* || exit 3
 cd $NAME-$VERSION
 fix_source
 
@@ -43,18 +65,15 @@ CXXFLAGS=$SLKCFLAGS \
 ./configure --build=$ARCH-slackware-linux \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
+            --libdir=/usr/lib${LIBDIRSUFFIX} \
             --sysconfdir=/etc \
             --mandir=/usr/man \
-	    --enable-shared=yes \
-	    --enable-static=no || exit 1
+            --enable-shared=yes \
+            --enable-static=no || exit 4
 
 # Build & install
-make -j4 || exit 1
-
-PKG="$TMP/package-$NAME"
-mkdir -p $PKG
-
-make -e DESTDIR=$PKG install || exit 3
+make -j4 || exit 5
+make -e DESTDIR=$PKG install || exit 6
 
 # Prepare
 bin_perms $PKG
